@@ -31,4 +31,3 @@ features = ["png"]
 
 [dependencies.rsvg-sys]
 version = "0.5.0"
-path = "./rsvg-sys"
