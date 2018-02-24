@@ -7,13 +7,6 @@ external_libraries = [
    "GLib",
    "GObject",
    "Gio",
-   "Atk",
    "GdkPixbuf",
-   "Gdk",
-   "Pango",
    "Cairo",
-]
-
-ignore = [
-   "xlib.Window",
 ]
