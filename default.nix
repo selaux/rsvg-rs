@@ -3,8 +3,8 @@ let
     nixpkgs = host_pkgs.fetchFromGitHub {
         owner = "NixOS";
         repo = "nixpkgs-channels";
-        rev = "45a85eacebf2181d2e12c0c1005bf3ba07583a74";
-        sha256 = "1ksrjl897cq6j2b3h0s671sd626fbbf6sq87yvrl26wvyrrd7dz8";
+        rev = "13e74a838db27825c88be99b1a21fbee33aa6803";
+        sha256 = "02kmj8cvxhhhalx14hbwwrzdnmpp072wgl5drlk6asn0zg68cgmy";
     };
 in
 with import nixpkgs {};
