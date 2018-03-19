@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.4.0
+
+- Works with `gtk = "0.4.0"`
+
 ### 0.3.0
 
 - Works with `gtk = "0.3.0"`
