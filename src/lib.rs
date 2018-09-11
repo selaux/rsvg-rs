@@ -10,10 +10,6 @@ extern crate gdk_pixbuf;
 extern crate bitflags;
 extern crate libc;
 
-macro_rules! callback_guard {
-    () => ()
-}
-
 pub use glib::Error;
 
 mod auto;
