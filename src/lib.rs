@@ -34,7 +34,7 @@ mod tests {
     extern crate image;
 
     use super::HandleExt;
-    use self::image::GenericImage;
+    use self::image::{GenericImage, GenericImageView};
 
     fn get_fixture_path(fixture: &str) -> String {
         return format!("./test-fixtures/{}", fixture);
