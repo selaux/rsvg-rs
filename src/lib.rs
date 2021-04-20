@@ -1,6 +1,6 @@
-extern crate rsvg_sys as ffi;
-extern crate glib_sys as glib_ffi;
-extern crate gobject_sys as gobject_ffi;
+extern crate rsvg_sys;
+extern crate glib_sys;
+extern crate gobject_sys;
 
 #[macro_use]
 extern crate glib;
@@ -9,10 +9,6 @@ extern crate gdk_pixbuf;
 #[macro_use]
 extern crate bitflags;
 extern crate libc;
-
-macro_rules! callback_guard {
-    () => ()
-}
 
 pub use glib::Error;
 
@@ -34,7 +30,8 @@ mod tests {
     extern crate image;
 
     use super::HandleExt;
-    use self::image::GenericImage;
+    use imageproc::drawing::Canvas;
+    // use std::io::Write;
 
     fn get_fixture_path(fixture: &str) -> String {
         return format!("./test-fixtures/{}", fixture);
@@ -54,7 +51,7 @@ mod tests {
     #[test]
     fn it_should_be_possible_to_load_svg_from_string() {
         let svg = r#"<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="50" height="50"></svg>"#;
-        let handle = super::Handle::new_from_str(svg).unwrap();
+        let handle = super::Handle::from_str(svg).unwrap();
 
         assert_eq!(handle.get_dimensions(), super::DimensionData { width: 50, height: 50, em: 50.0, ex: 50.0 });
         assert_eq!(handle.get_position_sub("#unknownid"), None);
@@ -63,7 +60,7 @@ mod tests {
     #[test]
         fn it_should_be_possible_to_load_svg_from_slice() {
             let svg = r#"<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="50" height="50"></svg>"#;
-            let handle = super::Handle::new_from_data(svg.as_bytes()).unwrap();
+            let handle = super::Handle::from_data(svg.as_bytes()).unwrap();
 
             assert_eq!(handle.get_dimensions(), super::DimensionData { width: 50, height: 50, em: 50.0, ex: 50.0 });
             assert_eq!(handle.get_position_sub("#unknownid"), None);
@@ -72,7 +69,7 @@ mod tests {
     #[test]
     fn it_should_be_possible_to_load_svg_from_file() {
         let svg_path = get_fixture_path("mysvg.svg");
-        let handle = super::Handle::new_from_file(&svg_path).unwrap();
+        let handle = super::Handle::from_file(&svg_path).unwrap();
 
         assert_eq!(handle.get_dimensions(), super::DimensionData { width: 100, height: 100, em: 100.0, ex: 100.0 });
         assert_eq!(handle.get_position_sub("#unknownid"), None);
@@ -82,7 +79,7 @@ mod tests {
     fn it_should_be_possible_to_render_to_cairo_context() {
         let svg_path = get_fixture_path("mysvg.svg");
         let expected = image::open(get_fixture_path("mysvg.svg.png")).unwrap();
-        let handle = super::Handle::new_from_file(&svg_path).unwrap();
+        let handle = super::Handle::from_file(&svg_path).unwrap();
         let dimensions = handle.get_dimensions();
         let surface = super::cairo::ImageSurface::create(super::cairo::Format::ARgb32, dimensions.width, dimensions.height).unwrap();
         let context = super::cairo::Context::new(&surface);
@@ -92,7 +89,13 @@ mod tests {
         handle.render_cairo(&context);
         surface.write_to_png(&mut png_data).unwrap();
 
-        let result = image::load_from_memory_with_format(&png_data, image::ImageFormat::PNG).unwrap();
+        // Update file
+        // {
+        //     let mut file = std::fs::OpenOptions::new().write(true).truncate(true).open(&get_fixture_path("mysvg.svg.png")).unwrap();
+        //     file.write_all(&png_data).unwrap();
+        // }
+
+        let result = image::load_from_memory_with_format(&png_data, image::ImageFormat::Png).unwrap();
         assert_dimensions_match!(result, expected);
         assert_pixels_eq!(result, expected);
     }
@@ -101,7 +104,7 @@ mod tests {
     fn it_should_be_possible_to_render_to_gdk_pixbuf_without_throwing() {
         let svg_path = get_fixture_path("mysvg.svg");
         let expected = image::open(get_fixture_path("mysvg.svg.png")).unwrap();
-        let handle = super::Handle::new_from_file(&svg_path).unwrap();
+        let handle = super::Handle::from_file(&svg_path).unwrap();
         let pixbuf = handle.get_pixbuf().unwrap();
         let pixels = (unsafe { pixbuf.get_pixels() }).to_vec();
         let dimensions = handle.get_dimensions();
@@ -115,7 +118,7 @@ mod tests {
 
     #[test]
     fn it_should_return_an_error_when_loading_non_existing_file() {
-        let handle = super::Handle::new_from_file("unknown.svg");
+        let handle = super::Handle::from_file("unknown.svg");
 
         assert!(handle.is_err());
     }

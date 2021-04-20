@@ -1,16 +1,11 @@
 let
-    host_pkgs = import <nixpkgs> {};
-    nixpkgs = host_pkgs.fetchFromGitHub {
-        owner = "NixOS";
-        repo = "nixpkgs-channels";
-        rev = "13e74a838db27825c88be99b1a21fbee33aa6803";
-        sha256 = "02kmj8cvxhhhalx14hbwwrzdnmpp072wgl5drlk6asn0zg68cgmy";
-    };
+    nixpkgs = import (builtins.fetchTarball
+      https://github.com/NixOS/nixpkgs/archive/0a5f5bab0e08e968ef25cff393312aa51a3512cf.tar.gz);
 in
-with import nixpkgs {};
+with nixpkgs {};
 stdenv.mkDerivation {
-  name = "the-renderer";
+  name = "rsvg-rs";
   version = "0.1.0";
   src = ./.;
-  buildInputs = [ cargo rustc librsvg gnome3.gtk ];
+  buildInputs = [ cargo rustc librsvg gnome3.gtk http-parser ];
 }

@@ -1,6 +1,6 @@
-use std::mem;
+use std::mem::MaybeUninit;
 use glib::translate::*;
-use ffi;
+use rsvg_sys;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[repr(C)]
@@ -26,42 +26,42 @@ impl DimensionData {
 impl Uninitialized for DimensionData {
     #[inline]
     unsafe fn uninitialized() -> Self {
-        mem::uninitialized()
+        MaybeUninit::<Self>::uninit().assume_init()
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtr<'a, *const ffi::RsvgDimensionData> for DimensionData {
+impl<'a> ToGlibPtr<'a, *const rsvg_sys::RsvgDimensionData> for DimensionData {
     type Storage = &'a Self;
 
     #[inline]
-    fn to_glib_none(&'a self) -> Stash<'a, *const ffi::RsvgDimensionData, Self> {
+    fn to_glib_none(&'a self) -> Stash<'a, *const rsvg_sys::RsvgDimensionData, Self> {
         let ptr: *const DimensionData = &*self;
-        Stash(ptr as *const ffi::RsvgDimensionData, self)
+        Stash(ptr as *const rsvg_sys::RsvgDimensionData, self)
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtrMut<'a, *mut ffi::RsvgDimensionData> for DimensionData {
+impl<'a> ToGlibPtrMut<'a, *mut rsvg_sys::RsvgDimensionData> for DimensionData {
     type Storage = &'a mut Self;
 
     #[inline]
-    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut ffi::RsvgDimensionData, Self> {
+    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut rsvg_sys::RsvgDimensionData, Self> {
         let ptr: *mut DimensionData = &mut *self;
-        StashMut(ptr as *mut ffi::RsvgDimensionData, self)
+        StashMut(ptr as *mut rsvg_sys::RsvgDimensionData, self)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*const ffi::RsvgDimensionData> for DimensionData {
-    unsafe fn from_glib_none(ptr: *const ffi::RsvgDimensionData) -> Self {
+impl FromGlibPtrNone<*const rsvg_sys::RsvgDimensionData> for DimensionData {
+    unsafe fn from_glib_none(ptr: *const rsvg_sys::RsvgDimensionData) -> Self {
         *(ptr as *const DimensionData)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut ffi::RsvgDimensionData> for DimensionData {
-    unsafe fn from_glib_none(ptr: *mut ffi::RsvgDimensionData) -> Self {
+impl FromGlibPtrNone<*mut rsvg_sys::RsvgDimensionData> for DimensionData {
+    unsafe fn from_glib_none(ptr: *mut rsvg_sys::RsvgDimensionData) -> Self {
         *(ptr as *mut DimensionData)
     }
 }

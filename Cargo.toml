@@ -1,6 +1,6 @@
 [package]
 name = "rsvg"
-version = "0.4.0"
+version = "0.9.0"
 authors = ["selaux"]
 description = "Rust bindings for the Rsvg library"
 repository = "https://github.com/selaux/rsvg-rs"
@@ -14,21 +14,21 @@ name = "rsvg"
 
 [dependencies]
 libc = "0.2"
-bitflags = "1.0"
-glib = "0.5.0"
-glib-sys = "0.6.0"
-gobject-sys = "0.6.0"
-gdk-pixbuf = "0.4.0"
+bitflags = "1.2"
+glib = "0.10"
+glib-sys = "0.10"
+gobject-sys = "0.10"
+gdk-pixbuf = "0.9"
 
 [dev-dependencies]
-image = "0.18.0"
-imageproc = "0.14.0"
-gtk = "0.4.0"
+image = "0.23.0"
+imageproc = "0.22.0"
+gtk = "0.9"
 
 [dependencies.cairo-rs]
-version = "0.4.1"
+version = "0.9"
 features = ["png"]
 
 [dependencies.rsvg-sys]
-version = "0.6.0"
+version = "0.9.0"
 path = "./rsvg-sys"

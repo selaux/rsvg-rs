@@ -1,17 +1,22 @@
 [build-dependencies]
 pkg-config = "0.3.7"
+system-deps = "1.3"
 
 [dependencies]
-atk-sys = "0.6.0"
-bitflags = "1.0"
-cairo-sys-rs = "0.6.0"
-gdk-pixbuf-sys = "0.6.0"
-gdk-sys = "0.6.0"
-gio-sys = "0.6.0"
-glib-sys = "0.6.0"
-gobject-sys = "0.6.0"
+atk-sys = "0.10"
+bitflags = "1.2"
+cairo-sys-rs = "0.10"
+gdk-pixbuf-sys = "0.10"
+gdk-sys = "0.10"
+gio-sys = "0.10"
+glib-sys = "0.10"
+gobject-sys = "0.10"
 libc = "0.2"
-pango-sys = "0.6.0"
+pango-sys = "0.10"
+
+[dev-dependencies]
+shell-words = "1.0.0"
+tempfile = "3"
 
 [features]
 dox = []
@@ -27,4 +32,11 @@ license = "MIT"
 links = "rsvg"
 name = "rsvg-sys"
 repository = "https://github.com/selaux/rsvg-rs"
-version = "0.6.0"
+version = "0.9.0"
+[package.metadata.system-deps.librsvg_2_0]
+name = "librsvg-2.0"
+version = "2.36"
+
+[package.metadata.system-deps.librsvg_2_0.feature-versions]
+[package.metadata.docs.rs]
+features = ["dox"]

@@ -23,7 +23,7 @@ fn main() {
         return;
     }
 
-    let handle = Handle::new_from_file(&args[1]).unwrap();
+    let handle = Handle::from_file(&args[1]).unwrap();
     let svg_dimensions = handle.get_dimensions();
 
     drawable(500, 500, move |drawing_area, cr| {

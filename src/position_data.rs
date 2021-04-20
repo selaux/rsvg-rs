@@ -1,6 +1,6 @@
-use std::mem;
+use std::mem::MaybeUninit;
 use glib::translate::*;
-use ffi;
+use rsvg_sys;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[repr(C)]
@@ -26,42 +26,42 @@ impl PositionData {
 impl Uninitialized for PositionData {
     #[inline]
     unsafe fn uninitialized() -> Self {
-        mem::uninitialized()
+        MaybeUninit::<Self>::uninit().assume_init()
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtr<'a, *const ffi::RsvgPositionData> for PositionData {
+impl<'a> ToGlibPtr<'a, *const rsvg_sys::RsvgPositionData> for PositionData {
     type Storage = &'a Self;
 
     #[inline]
-    fn to_glib_none(&'a self) -> Stash<'a, *const ffi::RsvgPositionData, Self> {
+    fn to_glib_none(&'a self) -> Stash<'a, *const rsvg_sys::RsvgPositionData, Self> {
         let ptr: *const PositionData = &*self;
-        Stash(ptr as *const ffi::RsvgPositionData, self)
+        Stash(ptr as *const rsvg_sys::RsvgPositionData, self)
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtrMut<'a, *mut ffi::RsvgPositionData> for PositionData {
+impl<'a> ToGlibPtrMut<'a, *mut rsvg_sys::RsvgPositionData> for PositionData {
     type Storage = &'a mut Self;
 
     #[inline]
-    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut ffi::RsvgPositionData, Self> {
+    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut rsvg_sys::RsvgPositionData, Self> {
         let ptr: *mut PositionData = &mut *self;
-        StashMut(ptr as *mut ffi::RsvgPositionData, self)
+        StashMut(ptr as *mut rsvg_sys::RsvgPositionData, self)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*const ffi::RsvgPositionData> for PositionData {
-    unsafe fn from_glib_none(ptr: *const ffi::RsvgPositionData) -> Self {
+impl FromGlibPtrNone<*const rsvg_sys::RsvgPositionData> for PositionData {
+    unsafe fn from_glib_none(ptr: *const rsvg_sys::RsvgPositionData) -> Self {
         *(ptr as *const PositionData)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut ffi::RsvgPositionData> for PositionData {
-    unsafe fn from_glib_none(ptr: *mut ffi::RsvgPositionData) -> Self {
+impl FromGlibPtrNone<*mut rsvg_sys::RsvgPositionData> for PositionData {
+    unsafe fn from_glib_none(ptr: *mut rsvg_sys::RsvgPositionData) -> Self {
         *(ptr as *mut PositionData)
     }
 }
