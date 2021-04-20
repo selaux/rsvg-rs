@@ -3,8 +3,8 @@
 // DO NOT EDIT
 
 mod handle;
-pub use self::handle::{Handle, HandleClass, NONE_HANDLE};
 pub use self::handle::HandleExt;
+pub use self::handle::{Handle, HandleClass, NONE_HANDLE};
 
 mod flags;
 pub use self::flags::HandleFlags;

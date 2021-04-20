@@ -1,6 +1,6 @@
-use std::mem::MaybeUninit;
 use glib::translate::*;
 use rsvg_sys;
+use std::mem::MaybeUninit;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[repr(C)]
@@ -14,15 +14,16 @@ pub struct DimensionData {
 impl DimensionData {
     pub fn new(width: i32, height: i32, em: f64, ex: f64) -> DimensionData {
         DimensionData {
-            width: width,
-            height: height,
-            em: em,
-            ex: ex,
+            width,
+            height,
+            em,
+            ex,
         }
     }
 }
 
 #[doc(hidden)]
+#[allow(clippy::uninit_assumed_init)]
 impl Uninitialized for DimensionData {
     #[inline]
     unsafe fn uninitialized() -> Self {

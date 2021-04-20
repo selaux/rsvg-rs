@@ -1,6 +1,6 @@
-use std::mem::MaybeUninit;
 use glib::translate::*;
 use rsvg_sys;
+use std::mem::MaybeUninit;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[repr(C)]
@@ -13,16 +13,12 @@ pub struct PositionData {
 
 impl PositionData {
     pub fn new(x: i32, y: i32, em: f64, ex: f64) -> PositionData {
-        PositionData {
-            x: x,
-            y: y,
-            em: em,
-            ex: ex,
-        }
+        PositionData { x, y, em, ex }
     }
 }
 
 #[doc(hidden)]
+#[allow(clippy::uninit_assumed_init)]
 impl Uninitialized for PositionData {
     #[inline]
     unsafe fn uninitialized() -> Self {

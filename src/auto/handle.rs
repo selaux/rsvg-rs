@@ -33,17 +33,20 @@ glib_wrapper! {
 
 impl Handle {
     pub fn new() -> Handle {
-        unsafe {
-            from_glib_full(rsvg_sys::rsvg_handle_new())
-        }
+        unsafe { from_glib_full(rsvg_sys::rsvg_handle_new()) }
     }
 
     pub fn from_data(data: &[u8]) -> Result<Handle, glib::Error> {
         let data_len = data.len() as usize;
         unsafe {
             let mut error = ptr::null_mut();
-            let ret = rsvg_sys::rsvg_handle_new_from_data(data.to_glib_none().0, data_len, &mut error);
-            if error.is_null() { Ok(from_glib_full(ret)) } else { Err(from_glib_full(error)) }
+            let ret =
+                rsvg_sys::rsvg_handle_new_from_data(data.to_glib_none().0, data_len, &mut error);
+            if error.is_null() {
+                Ok(from_glib_full(ret))
+            } else {
+                Err(from_glib_full(error))
+            }
         }
     }
 
@@ -51,7 +54,11 @@ impl Handle {
         unsafe {
             let mut error = ptr::null_mut();
             let ret = rsvg_sys::rsvg_handle_new_from_file(file_name.to_glib_none().0, &mut error);
-            if error.is_null() { Ok(from_glib_full(ret)) } else { Err(from_glib_full(error)) }
+            if error.is_null() {
+                Ok(from_glib_full(ret))
+            } else {
+                Err(from_glib_full(error))
+            }
         }
     }
 
@@ -64,9 +71,7 @@ impl Handle {
     //}
 
     pub fn with_flags(flags: HandleFlags) -> Handle {
-        unsafe {
-            from_glib_full(rsvg_sys::rsvg_handle_new_with_flags(flags.to_glib()))
-        }
+        unsafe { from_glib_full(rsvg_sys::rsvg_handle_new_with_flags(flags.to_glib())) }
     }
 }
 
@@ -145,14 +150,21 @@ impl<O: IsA<Handle>> HandleExt for O {
         unsafe {
             let mut error = ptr::null_mut();
             let _ = rsvg_sys::rsvg_handle_close(self.as_ref().to_glib_none().0, &mut error);
-            if error.is_null() { Ok(()) } else { Err(from_glib_full(error)) }
+            if error.is_null() {
+                Ok(())
+            } else {
+                Err(from_glib_full(error))
+            }
         }
     }
 
     fn get_dimensions(&self) -> DimensionData {
         unsafe {
             let mut dimension_data = DimensionData::uninitialized();
-            rsvg_sys::rsvg_handle_get_dimensions(self.as_ref().to_glib_none().0, dimension_data.to_glib_none_mut().0);
+            rsvg_sys::rsvg_handle_get_dimensions(
+                self.as_ref().to_glib_none().0,
+                dimension_data.to_glib_none_mut().0,
+            );
             dimension_data
         }
     }
@@ -160,34 +172,58 @@ impl<O: IsA<Handle>> HandleExt for O {
     fn get_dimensions_sub(&self, id: Option<&str>) -> Option<DimensionData> {
         unsafe {
             let mut dimension_data = DimensionData::uninitialized();
-            let ret = from_glib(rsvg_sys::rsvg_handle_get_dimensions_sub(self.as_ref().to_glib_none().0, dimension_data.to_glib_none_mut().0, id.to_glib_none().0));
-            if ret { Some(dimension_data) } else { None }
+            let ret = from_glib(rsvg_sys::rsvg_handle_get_dimensions_sub(
+                self.as_ref().to_glib_none().0,
+                dimension_data.to_glib_none_mut().0,
+                id.to_glib_none().0,
+            ));
+            if ret {
+                Some(dimension_data)
+            } else {
+                None
+            }
         }
     }
 
     fn get_pixbuf(&self) -> Option<gdk_pixbuf::Pixbuf> {
         unsafe {
-            from_glib_full(rsvg_sys::rsvg_handle_get_pixbuf(self.as_ref().to_glib_none().0))
+            from_glib_full(rsvg_sys::rsvg_handle_get_pixbuf(
+                self.as_ref().to_glib_none().0,
+            ))
         }
     }
 
     fn get_pixbuf_sub(&self, id: Option<&str>) -> Option<gdk_pixbuf::Pixbuf> {
         unsafe {
-            from_glib_full(rsvg_sys::rsvg_handle_get_pixbuf_sub(self.as_ref().to_glib_none().0, id.to_glib_none().0))
+            from_glib_full(rsvg_sys::rsvg_handle_get_pixbuf_sub(
+                self.as_ref().to_glib_none().0,
+                id.to_glib_none().0,
+            ))
         }
     }
 
     fn get_position_sub(&self, id: &str) -> Option<PositionData> {
         unsafe {
             let mut position_data = PositionData::uninitialized();
-            let ret = from_glib(rsvg_sys::rsvg_handle_get_position_sub(self.as_ref().to_glib_none().0, position_data.to_glib_none_mut().0, id.to_glib_none().0));
-            if ret { Some(position_data) } else { None }
+            let ret = from_glib(rsvg_sys::rsvg_handle_get_position_sub(
+                self.as_ref().to_glib_none().0,
+                position_data.to_glib_none_mut().0,
+                id.to_glib_none().0,
+            ));
+            if ret {
+                Some(position_data)
+            } else {
+                None
+            }
         }
     }
 
     fn has_sub(&self, id: &str) -> bool {
         unsafe {
-            from_glib(rsvg_sys::rsvg_handle_has_sub(self.as_ref().to_glib_none().0, id.to_glib_none().0))
+            from_glib(rsvg_sys::rsvg_handle_has_sub(
+                self.as_ref().to_glib_none().0,
+                id.to_glib_none().0,
+            ))
         }
     }
 
@@ -197,13 +233,20 @@ impl<O: IsA<Handle>> HandleExt for O {
 
     fn render_cairo(&self, cr: &cairo::Context) -> bool {
         unsafe {
-            from_glib(rsvg_sys::rsvg_handle_render_cairo(self.as_ref().to_glib_none().0, mut_override(cr.to_glib_none().0)))
+            from_glib(rsvg_sys::rsvg_handle_render_cairo(
+                self.as_ref().to_glib_none().0,
+                mut_override(cr.to_glib_none().0),
+            ))
         }
     }
 
     fn render_cairo_sub(&self, cr: &cairo::Context, id: Option<&str>) -> bool {
         unsafe {
-            from_glib(rsvg_sys::rsvg_handle_render_cairo_sub(self.as_ref().to_glib_none().0, mut_override(cr.to_glib_none().0), id.to_glib_none().0))
+            from_glib(rsvg_sys::rsvg_handle_render_cairo_sub(
+                self.as_ref().to_glib_none().0,
+                mut_override(cr.to_glib_none().0),
+                id.to_glib_none().0,
+            ))
         }
     }
 
@@ -213,7 +256,10 @@ impl<O: IsA<Handle>> HandleExt for O {
 
     fn set_base_uri(&self, base_uri: &str) {
         unsafe {
-            rsvg_sys::rsvg_handle_set_base_uri(self.as_ref().to_glib_none().0, base_uri.to_glib_none().0);
+            rsvg_sys::rsvg_handle_set_base_uri(
+                self.as_ref().to_glib_none().0,
+                base_uri.to_glib_none().0,
+            );
         }
     }
 
@@ -233,160 +279,286 @@ impl<O: IsA<Handle>> HandleExt for O {
         let count = buf.len() as usize;
         unsafe {
             let mut error = ptr::null_mut();
-            let _ = rsvg_sys::rsvg_handle_write(self.as_ref().to_glib_none().0, buf.to_glib_none().0, count, &mut error);
-            if error.is_null() { Ok(()) } else { Err(from_glib_full(error)) }
+            let _ = rsvg_sys::rsvg_handle_write(
+                self.as_ref().to_glib_none().0,
+                buf.to_glib_none().0,
+                count,
+                &mut error,
+            );
+            if error.is_null() {
+                Ok(())
+            } else {
+                Err(from_glib_full(error))
+            }
         }
     }
 
     fn get_property_dpi_x(&self) -> f64 {
         unsafe {
             let mut value = Value::from_type(<f64 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"dpi-x\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `dpi-x` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"dpi-x\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `dpi-x` getter")
+                .unwrap()
         }
     }
 
     fn set_property_dpi_x(&self, dpi_x: f64) {
         unsafe {
-            gobject_sys::g_object_set_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"dpi-x\0".as_ptr() as *const _, Value::from(&dpi_x).to_glib_none().0);
+            gobject_sys::g_object_set_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"dpi-x\0".as_ptr() as *const _,
+                Value::from(&dpi_x).to_glib_none().0,
+            );
         }
     }
 
     fn get_property_dpi_y(&self) -> f64 {
         unsafe {
             let mut value = Value::from_type(<f64 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"dpi-y\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `dpi-y` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"dpi-y\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `dpi-y` getter")
+                .unwrap()
         }
     }
 
     fn set_property_dpi_y(&self, dpi_y: f64) {
         unsafe {
-            gobject_sys::g_object_set_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"dpi-y\0".as_ptr() as *const _, Value::from(&dpi_y).to_glib_none().0);
+            gobject_sys::g_object_set_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"dpi-y\0".as_ptr() as *const _,
+                Value::from(&dpi_y).to_glib_none().0,
+            );
         }
     }
 
     fn get_property_em(&self) -> f64 {
         unsafe {
             let mut value = Value::from_type(<f64 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"em\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `em` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"em\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `em` getter")
+                .unwrap()
         }
     }
 
     fn get_property_ex(&self) -> f64 {
         unsafe {
             let mut value = Value::from_type(<f64 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"ex\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `ex` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"ex\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `ex` getter")
+                .unwrap()
         }
     }
 
     fn get_property_flags(&self) -> HandleFlags {
         unsafe {
             let mut value = Value::from_type(<HandleFlags as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"flags\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `flags` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"flags\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `flags` getter")
+                .unwrap()
         }
     }
 
     fn get_property_height(&self) -> i32 {
         unsafe {
             let mut value = Value::from_type(<i32 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"height\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `height` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"height\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `height` getter")
+                .unwrap()
         }
     }
 
     fn get_property_width(&self) -> i32 {
         unsafe {
             let mut value = Value::from_type(<i32 as StaticType>::static_type());
-            gobject_sys::g_object_get_property(self.to_glib_none().0 as *mut gobject_sys::GObject, b"width\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `width` getter").unwrap()
+            gobject_sys::g_object_get_property(
+                self.to_glib_none().0 as *mut gobject_sys::GObject,
+                b"width\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `width` getter")
+                .unwrap()
         }
     }
 
     fn connect_property_dpi_x_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_dpi_x_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_dpi_x_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::dpi-x\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_dpi_x_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::dpi-x\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_dpi_x_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_dpi_y_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_dpi_y_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_dpi_y_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::dpi-y\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_dpi_y_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::dpi-y\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_dpi_y_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_em_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_em_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_em_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::em\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_em_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::em\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_em_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_ex_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ex_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_ex_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::ex\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_ex_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::ex\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_ex_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_height_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_height_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_height_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::height\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_height_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::height\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_height_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     fn connect_property_width_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_width_trampoline<P, F: Fn(&P) + 'static>(this: *mut rsvg_sys::RsvgHandle, _param_spec: glib_sys::gpointer, f: glib_sys::gpointer)
-            where P: IsA<Handle>
+        unsafe extern "C" fn notify_width_trampoline<P, F: Fn(&P) + 'static>(
+            this: *mut rsvg_sys::RsvgHandle,
+            _param_spec: glib_sys::gpointer,
+            f: glib_sys::gpointer,
+        ) where
+            P: IsA<Handle>,
         {
             let f: &F = &*(f as *const F);
             f(&Handle::from_glib_borrow(this).unsafe_cast_ref())
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::width\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_width_trampoline::<Self, F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::width\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_width_trampoline::<Self, F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 }

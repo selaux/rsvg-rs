@@ -1,16 +1,23 @@
 use rsvg_sys;
-use std::ptr;
+use std::{ptr, str::FromStr};
 
-use glib::Error;
-use glib::translate::*;
 use auto::Handle;
+use glib::translate::*;
+use glib::Error;
 
-impl Handle {
-    pub fn from_str(data: &str) -> Result<Handle, Error> {
+impl FromStr for Handle {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         unsafe {
             let mut error = ptr::null_mut();
-            let handle = rsvg_sys::rsvg_handle_new_from_data(data.as_ptr() as *mut _, data.len() as _, &mut error);
-            if error.is_null() { Ok(from_glib_full(handle)) } else { Err(from_glib_full(error)) }
+            let handle =
+                rsvg_sys::rsvg_handle_new_from_data(s.as_ptr() as *mut _, s.len() as _, &mut error);
+            if error.is_null() {
+                Ok(from_glib_full(handle))
+            } else {
+                Err(from_glib_full(error))
+            }
         }
     }
 }
