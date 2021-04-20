@@ -1,3 +1,5 @@
 language: nix
 script:
+  - nix-shell --pure --run "cargo fmt --check"
+  - nix-shell --pure --run "cargo clippy"
   - nix-shell --pure --run "cargo test"

@@ -3,19 +3,24 @@
 // DO NOT EDIT
 
 #![allow(non_camel_case_types, non_upper_case_globals, non_snake_case)]
-#![allow(clippy::approx_constant, clippy::type_complexity, clippy::unreadable_literal)]
+#![allow(
+    clippy::approx_constant,
+    clippy::type_complexity,
+    clippy::unreadable_literal
+)]
 
-extern crate libc;
+extern crate cairo_sys as cairo;
+extern crate gdk_pixbuf_sys as gdk_pixbuf;
+extern crate gio_sys as gio;
 extern crate glib_sys as glib;
 extern crate gobject_sys as gobject;
-extern crate gio_sys as gio;
-extern crate gdk_pixbuf_sys as gdk_pixbuf;
-extern crate cairo_sys as cairo;
+extern crate libc;
 
 #[allow(unused_imports)]
-use libc::{c_int, c_char, c_uchar, c_float, c_uint, c_double,
-    c_short, c_ushort, c_long, c_ulong,
-    c_void, size_t, ssize_t, intptr_t, uintptr_t, time_t, FILE};
+use libc::{
+    c_char, c_double, c_float, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort, c_void,
+    intptr_t, size_t, ssize_t, time_t, uintptr_t, FILE,
+};
 
 #[allow(unused_imports)]
 use glib::{gboolean, gconstpointer, gpointer, GType};
@@ -49,11 +54,11 @@ pub struct RsvgDimensionData {
 impl ::std::fmt::Debug for RsvgDimensionData {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("RsvgDimensionData @ {:?}", self as *const _))
-         .field("width", &self.width)
-         .field("height", &self.height)
-         .field("em", &self.em)
-         .field("ex", &self.ex)
-         .finish()
+            .field("width", &self.width)
+            .field("height", &self.height)
+            .field("em", &self.em)
+            .field("ex", &self.ex)
+            .finish()
     }
 }
 
@@ -67,8 +72,8 @@ pub struct RsvgHandleClass {
 impl ::std::fmt::Debug for RsvgHandleClass {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("RsvgHandleClass @ {:?}", self as *const _))
-         .field("parent", &self.parent)
-         .finish()
+            .field("parent", &self.parent)
+            .finish()
     }
 }
 
@@ -87,9 +92,9 @@ pub struct RsvgPositionData {
 impl ::std::fmt::Debug for RsvgPositionData {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("RsvgPositionData @ {:?}", self as *const _))
-         .field("x", &self.x)
-         .field("y", &self.y)
-         .finish()
+            .field("x", &self.x)
+            .field("y", &self.y)
+            .finish()
     }
 }
 
@@ -105,8 +110,8 @@ pub struct RsvgHandle {
 impl ::std::fmt::Debug for RsvgHandle {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("RsvgHandle @ {:?}", self as *const _))
-         .field("parent", &self.parent)
-         .finish()
+            .field("parent", &self.parent)
+            .finish()
     }
 }
 
@@ -128,27 +133,73 @@ extern "C" {
     //=========================================================================
     pub fn rsvg_handle_get_type() -> GType;
     pub fn rsvg_handle_new() -> *mut RsvgHandle;
-    pub fn rsvg_handle_new_from_data(data: *mut u8, data_len: size_t, error: *mut *mut glib::GError) -> *mut RsvgHandle;
-    pub fn rsvg_handle_new_from_file(file_name: *const c_char, error: *mut *mut glib::GError) -> *mut RsvgHandle;
-    pub fn rsvg_handle_new_from_gfile_sync(file: *mut gio::GFile, flags: RsvgHandleFlags, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> *mut RsvgHandle;
-    pub fn rsvg_handle_new_from_stream_sync(input_stream: *mut gio::GInputStream, base_file: *mut gio::GFile, flags: RsvgHandleFlags, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> *mut RsvgHandle;
+    pub fn rsvg_handle_new_from_data(
+        data: *mut u8,
+        data_len: size_t,
+        error: *mut *mut glib::GError,
+    ) -> *mut RsvgHandle;
+    pub fn rsvg_handle_new_from_file(
+        file_name: *const c_char,
+        error: *mut *mut glib::GError,
+    ) -> *mut RsvgHandle;
+    pub fn rsvg_handle_new_from_gfile_sync(
+        file: *mut gio::GFile,
+        flags: RsvgHandleFlags,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> *mut RsvgHandle;
+    pub fn rsvg_handle_new_from_stream_sync(
+        input_stream: *mut gio::GInputStream,
+        base_file: *mut gio::GFile,
+        flags: RsvgHandleFlags,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> *mut RsvgHandle;
     pub fn rsvg_handle_new_with_flags(flags: RsvgHandleFlags) -> *mut RsvgHandle;
     pub fn rsvg_handle_close(handle: *mut RsvgHandle, error: *mut *mut glib::GError) -> gboolean;
     pub fn rsvg_handle_get_base_uri(handle: *mut RsvgHandle) -> *const c_char;
-    pub fn rsvg_handle_get_dimensions(handle: *mut RsvgHandle, dimension_data: *mut RsvgDimensionData);
-    pub fn rsvg_handle_get_dimensions_sub(handle: *mut RsvgHandle, dimension_data: *mut RsvgDimensionData, id: *const c_char) -> gboolean;
+    pub fn rsvg_handle_get_dimensions(
+        handle: *mut RsvgHandle,
+        dimension_data: *mut RsvgDimensionData,
+    );
+    pub fn rsvg_handle_get_dimensions_sub(
+        handle: *mut RsvgHandle,
+        dimension_data: *mut RsvgDimensionData,
+        id: *const c_char,
+    ) -> gboolean;
     pub fn rsvg_handle_get_pixbuf(handle: *mut RsvgHandle) -> *mut gdk_pixbuf::GdkPixbuf;
-    pub fn rsvg_handle_get_pixbuf_sub(handle: *mut RsvgHandle, id: *const c_char) -> *mut gdk_pixbuf::GdkPixbuf;
-    pub fn rsvg_handle_get_position_sub(handle: *mut RsvgHandle, position_data: *mut RsvgPositionData, id: *const c_char) -> gboolean;
+    pub fn rsvg_handle_get_pixbuf_sub(
+        handle: *mut RsvgHandle,
+        id: *const c_char,
+    ) -> *mut gdk_pixbuf::GdkPixbuf;
+    pub fn rsvg_handle_get_position_sub(
+        handle: *mut RsvgHandle,
+        position_data: *mut RsvgPositionData,
+        id: *const c_char,
+    ) -> gboolean;
     pub fn rsvg_handle_has_sub(handle: *mut RsvgHandle, id: *const c_char) -> gboolean;
-    pub fn rsvg_handle_read_stream_sync(handle: *mut RsvgHandle, stream: *mut gio::GInputStream, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> gboolean;
+    pub fn rsvg_handle_read_stream_sync(
+        handle: *mut RsvgHandle,
+        stream: *mut gio::GInputStream,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> gboolean;
     pub fn rsvg_handle_render_cairo(handle: *mut RsvgHandle, cr: *mut cairo::cairo_t) -> gboolean;
-    pub fn rsvg_handle_render_cairo_sub(handle: *mut RsvgHandle, cr: *mut cairo::cairo_t, id: *const c_char) -> gboolean;
+    pub fn rsvg_handle_render_cairo_sub(
+        handle: *mut RsvgHandle,
+        cr: *mut cairo::cairo_t,
+        id: *const c_char,
+    ) -> gboolean;
     pub fn rsvg_handle_set_base_gfile(handle: *mut RsvgHandle, base_file: *mut gio::GFile);
     pub fn rsvg_handle_set_base_uri(handle: *mut RsvgHandle, base_uri: *const c_char);
     pub fn rsvg_handle_set_dpi(handle: *mut RsvgHandle, dpi: c_double);
     pub fn rsvg_handle_set_dpi_x_y(handle: *mut RsvgHandle, dpi_x: c_double, dpi_y: c_double);
-    pub fn rsvg_handle_write(handle: *mut RsvgHandle, buf: *mut u8, count: size_t, error: *mut *mut glib::GError) -> gboolean;
+    pub fn rsvg_handle_write(
+        handle: *mut RsvgHandle,
+        buf: *mut u8,
+        count: size_t,
+        error: *mut *mut glib::GError,
+    ) -> gboolean;
 
     //=========================================================================
     // Other functions

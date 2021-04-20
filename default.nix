@@ -7,5 +7,5 @@ stdenv.mkDerivation {
   name = "rsvg-rs";
   version = "0.1.0";
   src = ./.;
-  buildInputs = [ cargo rustc librsvg gnome3.gtk http-parser ];
+  buildInputs = [ cargo rustc librsvg gnome3.gtk http-parser pkgconfig ];
 }
