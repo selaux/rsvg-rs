@@ -6,6 +6,17 @@ with nixpkgs {};
 stdenv.mkDerivation {
   name = "rsvg-rs";
   version = "0.1.0";
-  src = ./.;
-  buildInputs = [ cargo rustc librsvg gnome3.gtk http-parser pkgconfig ];
+  src = lib.sourceByRegex ./. [
+    "^examples.*$"
+    "^gir.*$"
+    "^gir-files$"
+    "^rsvg-sys$"
+    "^src$"
+    "^test-fixtures$"
+    "^Cargo.toml$"
+    "^Cargo.lock$"
+    "^Gir.toml$"
+    "^Makefile$"
+  ];
+  buildInputs = [ cargo rustc rustfmt librsvg gnome3.gtk http-parser pkgconfig ];
 }
