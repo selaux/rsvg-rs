@@ -18,5 +18,5 @@ stdenv.mkDerivation {
     "^Gir.toml$"
     "^Makefile$"
   ];
-  buildInputs = [ cargo rustc rustfmt librsvg gnome3.gtk http-parser pkgconfig ];
+  buildInputs = [ cargo rustc rustfmt clippy librsvg gnome3.gtk http-parser pkgconfig ];
 }
