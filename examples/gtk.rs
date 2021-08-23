@@ -24,19 +24,19 @@ fn main() {
     }
 
     let handle = Handle::from_file(&args[1]).unwrap();
-    let svg_dimensions = handle.get_dimensions();
+    let svg_dimensions = handle.dimensions();
 
     drawable(500, 500, move |drawing_area, cr| {
         let (da_width, da_height) = (
-            drawing_area.get_allocated_width(),
-            drawing_area.get_allocated_height(),
+            drawing_area.allocated_width(),
+            drawing_area.allocated_height(),
         );
         let (svg_width, svg_height) = (svg_dimensions.width, svg_dimensions.height);
         let (scale_x, scale_y) = (
             da_width as f64 / svg_width as f64,
             da_height as f64 / svg_height as f64,
         );
-        let scale = if scale_x < scale_y { scale_x } else { scale_y };
+        let scale = scale_x.min(scale_y);
 
         println!(
             "window_size: {}, {}; svg_size: {}, {}; scale: {}",
@@ -44,7 +44,7 @@ fn main() {
         );
         cr.scale(scale, scale);
 
-        cr.paint_with_alpha(0.0);
+        cr.paint_with_alpha(0.0).expect("paint with alpha");
         handle.render_cairo(&cr);
 
         Inhibit(false)

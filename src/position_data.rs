@@ -1,5 +1,4 @@
 use glib::translate::*;
-use rsvg_sys;
 use std::mem::MaybeUninit;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -27,37 +26,37 @@ impl Uninitialized for PositionData {
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtr<'a, *const rsvg_sys::RsvgPositionData> for PositionData {
+impl<'a> ToGlibPtr<'a, *const ffi::RsvgPositionData> for PositionData {
     type Storage = &'a Self;
 
     #[inline]
-    fn to_glib_none(&'a self) -> Stash<'a, *const rsvg_sys::RsvgPositionData, Self> {
+    fn to_glib_none(&'a self) -> Stash<'a, *const ffi::RsvgPositionData, Self> {
         let ptr: *const PositionData = &*self;
-        Stash(ptr as *const rsvg_sys::RsvgPositionData, self)
+        Stash(ptr as *const ffi::RsvgPositionData, self)
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtrMut<'a, *mut rsvg_sys::RsvgPositionData> for PositionData {
+impl<'a> ToGlibPtrMut<'a, *mut ffi::RsvgPositionData> for PositionData {
     type Storage = &'a mut Self;
 
     #[inline]
-    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut rsvg_sys::RsvgPositionData, Self> {
+    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut ffi::RsvgPositionData, Self> {
         let ptr: *mut PositionData = &mut *self;
-        StashMut(ptr as *mut rsvg_sys::RsvgPositionData, self)
+        StashMut(ptr as *mut ffi::RsvgPositionData, self)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*const rsvg_sys::RsvgPositionData> for PositionData {
-    unsafe fn from_glib_none(ptr: *const rsvg_sys::RsvgPositionData) -> Self {
+impl FromGlibPtrNone<*const ffi::RsvgPositionData> for PositionData {
+    unsafe fn from_glib_none(ptr: *const ffi::RsvgPositionData) -> Self {
         *(ptr as *const PositionData)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut rsvg_sys::RsvgPositionData> for PositionData {
-    unsafe fn from_glib_none(ptr: *mut rsvg_sys::RsvgPositionData) -> Self {
+impl FromGlibPtrNone<*mut ffi::RsvgPositionData> for PositionData {
+    unsafe fn from_glib_none(ptr: *mut ffi::RsvgPositionData) -> Self {
         *(ptr as *mut PositionData)
     }
 }

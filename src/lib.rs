@@ -1,38 +1,27 @@
-extern crate glib_sys;
-extern crate gobject_sys;
-extern crate rsvg_sys;
-
-#[macro_use]
-extern crate glib;
-extern crate cairo;
-extern crate gdk_pixbuf;
-#[macro_use]
-extern crate bitflags;
-extern crate libc;
-
 pub use glib::Error;
 
 mod auto;
 pub use auto::*;
 
 mod dimension_data;
-mod handle;
-mod position_data;
-pub use dimension_data::DimensionData;
-pub use position_data::PositionData;
+pub use dimension_data::*;
 
-#[cfg(test)]
-#[macro_use]
-extern crate imageproc;
+mod handle;
+pub use handle::*;
+
+mod position_data;
+pub use position_data::*;
 
 #[cfg(test)]
 mod tests {
     extern crate image;
+    extern crate imageproc;
 
-    use super::HandleExt;
-    use imageproc::drawing::Canvas;
+    use cairo::{Context, Format, ImageSurface};
+    use imageproc::{assert_dimensions_match, assert_pixels_eq, drawing::Canvas};
     use std::str::FromStr;
     // use std::io::Write;
+    use crate::HandleExt;
 
     fn get_fixture_path(fixture: &str) -> String {
         return format!("./test-fixtures/{}", fixture);
@@ -46,7 +35,7 @@ mod tests {
         handle.close().unwrap();
 
         assert_eq!(
-            handle.get_dimensions(),
+            handle.dimensions(),
             super::DimensionData {
                 width: 50,
                 height: 50,
@@ -54,7 +43,7 @@ mod tests {
                 ex: 50.0
             }
         );
-        assert_eq!(handle.get_position_sub("#unknownid"), None);
+        assert_eq!(handle.position_sub("#unknownid"), None);
     }
 
     #[test]
@@ -63,7 +52,7 @@ mod tests {
         let handle = super::Handle::from_str(svg).unwrap();
 
         assert_eq!(
-            handle.get_dimensions(),
+            handle.dimensions(),
             super::DimensionData {
                 width: 50,
                 height: 50,
@@ -71,7 +60,7 @@ mod tests {
                 ex: 50.0
             }
         );
-        assert_eq!(handle.get_position_sub("#unknownid"), None);
+        assert_eq!(handle.position_sub("#unknownid"), None);
     }
 
     #[test]
@@ -80,7 +69,7 @@ mod tests {
         let handle = super::Handle::from_data(svg.as_bytes()).unwrap();
 
         assert_eq!(
-            handle.get_dimensions(),
+            handle.dimensions(),
             super::DimensionData {
                 width: 50,
                 height: 50,
@@ -88,7 +77,7 @@ mod tests {
                 ex: 50.0
             }
         );
-        assert_eq!(handle.get_position_sub("#unknownid"), None);
+        assert_eq!(handle.position_sub("#unknownid"), None);
     }
 
     #[test]
@@ -97,7 +86,7 @@ mod tests {
         let handle = super::Handle::from_file(&svg_path).unwrap();
 
         assert_eq!(
-            handle.get_dimensions(),
+            handle.dimensions(),
             super::DimensionData {
                 width: 100,
                 height: 100,
@@ -105,25 +94,22 @@ mod tests {
                 ex: 100.0
             }
         );
-        assert_eq!(handle.get_position_sub("#unknownid"), None);
+        assert_eq!(handle.position_sub("#unknownid"), None);
     }
 
     #[test]
     fn it_should_be_possible_to_render_to_cairo_context() {
         let svg_path = get_fixture_path("mysvg.svg");
-        let expected = image::open(get_fixture_path("mysvg.svg.png")).unwrap();
-        let handle = super::Handle::from_file(&svg_path).unwrap();
-        let dimensions = handle.get_dimensions();
-        let surface = super::cairo::ImageSurface::create(
-            super::cairo::Format::ARgb32,
-            dimensions.width,
-            dimensions.height,
-        )
-        .unwrap();
-        let context = super::cairo::Context::new(&surface);
+        let expected =
+            image::open(get_fixture_path("mysvg.svg.png")).expect("fixture opening failed");
+        let handle = super::Handle::from_file(&svg_path).expect("handle from file failed");
+        let dimensions = handle.dimensions();
+        let surface =
+            ImageSurface::create(Format::ARgb32, dimensions.width, dimensions.height).unwrap();
+        let context = Context::new(&surface).expect("context creation failed");
         let mut png_data: Vec<u8> = vec![];
 
-        context.paint_with_alpha(0.0);
+        context.paint_with_alpha(0.0).expect("paint");
         handle.render_cairo(&context);
         surface.write_to_png(&mut png_data).unwrap();
 
@@ -144,9 +130,9 @@ mod tests {
         let svg_path = get_fixture_path("mysvg.svg");
         let expected = image::open(get_fixture_path("mysvg.svg.png")).unwrap();
         let handle = super::Handle::from_file(&svg_path).unwrap();
-        let pixbuf = handle.get_pixbuf().unwrap();
-        let pixels = (unsafe { pixbuf.get_pixels() }).to_vec();
-        let dimensions = handle.get_dimensions();
+        let pixbuf = handle.pixbuf().unwrap();
+        let pixels = (unsafe { pixbuf.pixels() }).to_vec();
+        let dimensions = handle.dimensions();
         let result =
             image::ImageBuffer::from_raw(dimensions.width as u32, dimensions.height as u32, pixels)
                 .map(|v| image::DynamicImage::ImageRgba8(v))

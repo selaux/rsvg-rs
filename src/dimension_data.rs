@@ -1,5 +1,4 @@
 use glib::translate::*;
-use rsvg_sys;
 use std::mem::MaybeUninit;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -32,37 +31,37 @@ impl Uninitialized for DimensionData {
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtr<'a, *const rsvg_sys::RsvgDimensionData> for DimensionData {
+impl<'a> ToGlibPtr<'a, *const ffi::RsvgDimensionData> for DimensionData {
     type Storage = &'a Self;
 
     #[inline]
-    fn to_glib_none(&'a self) -> Stash<'a, *const rsvg_sys::RsvgDimensionData, Self> {
+    fn to_glib_none(&'a self) -> Stash<'a, *const ffi::RsvgDimensionData, Self> {
         let ptr: *const DimensionData = &*self;
-        Stash(ptr as *const rsvg_sys::RsvgDimensionData, self)
+        Stash(ptr as *const ffi::RsvgDimensionData, self)
     }
 }
 
 #[doc(hidden)]
-impl<'a> ToGlibPtrMut<'a, *mut rsvg_sys::RsvgDimensionData> for DimensionData {
+impl<'a> ToGlibPtrMut<'a, *mut ffi::RsvgDimensionData> for DimensionData {
     type Storage = &'a mut Self;
 
     #[inline]
-    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut rsvg_sys::RsvgDimensionData, Self> {
+    fn to_glib_none_mut(&'a mut self) -> StashMut<'a, *mut ffi::RsvgDimensionData, Self> {
         let ptr: *mut DimensionData = &mut *self;
-        StashMut(ptr as *mut rsvg_sys::RsvgDimensionData, self)
+        StashMut(ptr as *mut ffi::RsvgDimensionData, self)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*const rsvg_sys::RsvgDimensionData> for DimensionData {
-    unsafe fn from_glib_none(ptr: *const rsvg_sys::RsvgDimensionData) -> Self {
+impl FromGlibPtrNone<*const ffi::RsvgDimensionData> for DimensionData {
+    unsafe fn from_glib_none(ptr: *const ffi::RsvgDimensionData) -> Self {
         *(ptr as *const DimensionData)
     }
 }
 
 #[doc(hidden)]
-impl FromGlibPtrNone<*mut rsvg_sys::RsvgDimensionData> for DimensionData {
-    unsafe fn from_glib_none(ptr: *mut rsvg_sys::RsvgDimensionData) -> Self {
+impl FromGlibPtrNone<*mut ffi::RsvgDimensionData> for DimensionData {
+    unsafe fn from_glib_none(ptr: *mut ffi::RsvgDimensionData) -> Self {
         *(ptr as *mut DimensionData)
     }
 }
