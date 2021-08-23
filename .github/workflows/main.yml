@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Install Nix
+        uses: cachix/install-nix-action@v13
+
+      - name: Check format
+        run: nix-shell --pure --run "cargo fmt -- --check"
+
+      - name: Check clippy lints
+        run: nix-shell --pure --run "cargo clippy"
+        
+      - name: Run unit tests
+        run: nix-shell --pure --run "cargo test"
